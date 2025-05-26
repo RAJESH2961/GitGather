@@ -79,26 +79,26 @@ function HomePage(props) {
 }
 // before the component renders this below code will be executed.
 // statis generation
-// export async function getStaticProps() {
-//     // fetch data from an API
-//     // any thing inside this will never run on client machine
-//     return {
-//         props: {
-//             meetups: DUMMY_MEETUPS
-//         },
-//         revalidate: 1
-//     };
-// }
-// it runs for every request
-export async function getServerSideProps(){
-    const req = context.req;
-    const res = context.req;
-
-    return{
+export async function getStaticProps() {
+    // fetch data from an API
+    // any thing inside this will never run on client machine
+    return {
         props: {
             meetups: DUMMY_MEETUPS
-        }
-    }
+        },
+        revalidate: 1
+    };
 }
+// // it runs for every request
+// export async function getServerSideProps(){
+//     const req = context.req;
+//     const res = context.req;
+
+//     return{
+//         props: {
+//             meetups: DUMMY_MEETUPS
+//         }
+//     }
+// }
 
 export default HomePage;
