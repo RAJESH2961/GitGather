@@ -1,15 +1,16 @@
 import { useRouter } from "next/router";
 import MeetupDetail from "../../components/meetups/MeetupDetail";
-function MeetupDetails() {
+import { MongoClient, ObjectId } from "mongodb";
 
-    useRouter
+function MeetupDetails(props) {
+
     return (
         <>
       <MeetupDetail
-        image="https://images.unsplash.com/photo-1581091870622-436f2cd86b39"
-        title="Next.js Dev Meetup"
-        address="Online Zoom Event"
-        description="Join CSE students and developers to learn about modern full-stack web development using Next.js."
+        image={props.meetupData.image}
+        title={props.meetupData.title}
+        address={props.meetupData.address}
+        description={props.meetupData.description}
       />
 
     </>        
@@ -17,13 +18,19 @@ function MeetupDetails() {
 }
 
 export async function getStaticPaths() {
+    // fetch data from an API
+    const client = await MongoClient.connect(
+      'mongodb+srv://RAJESH:%23gBGBRM72931@nextjs.1aijdyj.mongodb.net/?retryWrites=true&w=majority&appName=nextjs'
+    );
+      const db = client.db('meetups');
+
+      const meetupsCollection = db.collection('meetups')
+      const meetups = await meetupsCollection.find({}, {_id : 1}).toArray();
+
+      client.close();
     return {
         fallback: false,
-        paths: [
-            { params: {
-                meetupId: 'm1',
-            } }
-        ]
+        paths: meetups.map(meetup => ({ params: { meetupId: meetup._id.toString() }, }))
     }
 }
 
@@ -34,17 +41,25 @@ export async function getStaticProps(context){
     // getting id from context without using useRouter
     const meetupId = context.params.meetupId;
     // fetching data for single meetup
+    const client = await MongoClient.connect(
+      'mongodb+srv://RAJESH:%23gBGBRM72931@nextjs.1aijdyj.mongodb.net/?retryWrites=true&w=majority&appName=nextjs'
+    );
+    const db = client.db('meetups');
+
+      const meetupsCollection = db.collection('meetups')
+        const selectedMeetup = await meetupsCollection.findOne({ _id: new ObjectId(meetupId) });
+        client.close();
     return {
         props: {
             meetupData: {
-                image: "https://images.unsplash.com/photo-1581091870622-436f2cd86b39",
-                id: meetupId,
-        title: "Next.js Dev Meetup",
-        address: "Online Zoom Event",
-        description: "Join CSE students and developers to learn about modern full-stack web development using Next.js."
-            }
-        }
+                id: selectedMeetup._id.toString(),
+                title: selectedMeetup.title,
+                address: selectedMeetup.address,
+                image: selectedMeetup.image,
+                description: selectedMeetup.description,
+            },
     }
+}
 
 }
 
