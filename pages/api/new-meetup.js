@@ -6,8 +6,11 @@ async function handler(req, res) {
         // const { title, image, address, description } = data;
             // #gBGBRM72931
         // storing data in database
-        const client = MongoClient.connect('mongodb+srv://RAJESH:#gBGBRM72931@nextjs.1aijdyj.mongodb.net/?retryWrites=true&w=majority&appName=nextjs');
-        const db = (await client).db();
+        // mongodb+srv://RAJESH:<db_password>@nextjs.1aijdyj.mongodb.net/?retryWrites=true&w=majority&appName=nextjs
+const client = await MongoClient.connect(
+  'mongodb+srv://RAJESH:%23gBGBRM72931@nextjs.1aijdyj.mongodb.net/?retryWrites=true&w=majority&appName=nextjs'
+);
+        const db = client.db('meetups');
 
         const meetupsCollection = db.collection('meetups');
         const result = await meetupsCollection.insertOne(data);
