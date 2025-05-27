@@ -5,15 +5,12 @@ import { MongoClient, ObjectId } from "mongodb";
 function MeetupDetails(props) {
 
     return (
-        <>
       <MeetupDetail
         image={props.meetupData.image}
         title={props.meetupData.title}
         address={props.meetupData.address}
         description={props.meetupData.description}
-      />
-
-    </>        
+      />   
     )
 }
 
